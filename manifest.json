@@ -7,7 +7,8 @@
     "storage",
     "tabs",
     "alarms",
-    "notifications"
+    "notifications",
+    "offscreen"
   ],
   "host_permissions": [
     "<all_urls>"
@@ -27,6 +28,13 @@
     "default_popup": "dist/popup/index.html",
     "default_title": "Bychok"
   },
+  "offscreen_documents": [
+    {
+      "url": "assets/offscreen/audio.html",
+      "reasons": ["AUDIO_PLAYBACK"],
+      "justification": "Play focus mode sounds while running in the background"
+    }
+  ],
   "icons": {
     "16": "assets/icon-16.png",
     "32": "assets/icon-32.png",
