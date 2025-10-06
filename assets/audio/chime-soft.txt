@@ -1,0 +1,4 @@
+Placeholder for focus entry sound "chime-soft".
+
+Replace this file with a production-ready `chime-soft.mp3` encoded at 44.1 kHz.
+Aim for a soft, welcoming cue under 3 seconds with a gentle fade-out.

@@ -1,0 +1,4 @@
+Placeholder for focus entry sound "pulse-air".
+
+Replace this file with a production-ready `pulse-air.mp3` encoded at 44.1 kHz.
+Target a short, airy swell under 3 seconds without harsh transients.

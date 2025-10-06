@@ -1,0 +1,1 @@
+Placeholder for the 32×32 extension icon. Replace this file with a PNG named icon-32.png when providing the production artwork.
