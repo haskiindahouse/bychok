@@ -18,6 +18,39 @@ let cachedSessions: Session[] = [];
 let cachedStreaks: Streak[] = [];
 let focusMode: FocusModeState | null = null;
 let focusEndingNotified = false;
+let audioOffscreenDocumentPromise: Promise<void> | null = null;
+
+async function ensureAudioOffscreenDocument(): Promise<void> {
+  if (!chrome.offscreen?.createDocument) {
+    return;
+  }
+
+  try {
+    if (chrome.offscreen.hasDocument) {
+      const hasDocument = await chrome.offscreen.hasDocument();
+      if (hasDocument) {
+        return;
+      }
+    }
+  } catch (error) {
+    console.warn('Unable to determine offscreen document state', error);
+  }
+
+  if (!audioOffscreenDocumentPromise) {
+    audioOffscreenDocumentPromise = chrome.offscreen
+      .createDocument({
+        url: 'assets/offscreen/audio.html',
+        reasons: [chrome.offscreen.Reason.AUDIO_PLAYBACK],
+        justification: 'Play focus mode audio while the extension runs in the background.'
+      })
+      .catch((error) => {
+        audioOffscreenDocumentPromise = null;
+        throw error;
+      });
+  }
+
+  await audioOffscreenDocumentPromise;
+}
 
 async function ensureCaches(): Promise<void> {
   if (!cachedSettings) {
@@ -163,6 +196,13 @@ async function createNotification(id: string, options: { title: string; message:
 
 async function playSound(soundId: string): Promise<void> {
   try {
+    if (chrome.offscreen?.createDocument) {
+      try {
+        await ensureAudioOffscreenDocument();
+      } catch (error) {
+        console.warn('Unable to initialize audio offscreen document', error);
+      }
+    }
     const url = chrome.runtime.getURL(`assets/audio/${soundId}.mp3`);
     await chrome.runtime.sendMessage({ type: 'play-sound', payload: { url } });
   } catch (error) {
