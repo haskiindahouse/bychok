@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "Bychok Focus Companion",
+  "description": "Track focus sessions with streaks, quiet hours, and an in-page overlay.",
+  "version": "0.1.0",
+  "permissions": [
+    "storage",
+    "tabs",
+    "alarms",
+    "notifications"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "dist/service_worker.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["dist/content/overlay.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "dist/popup/index.html",
+    "default_title": "Bychok"
+  },
+  "icons": {
+    "16": "assets/icon-16.png",
+    "32": "assets/icon-32.png",
+    "128": "assets/icon-128.png"
+  }
+}
