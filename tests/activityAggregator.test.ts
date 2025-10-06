@@ -72,6 +72,7 @@ describe('evaluateQuietHours', () => {
     const date = new Date('2023-05-01T23:00:00Z');
     const result = evaluateQuietHours(SETTINGS, date);
     expect(result.withinQuietHours).toBe(true);
+    expect(result.activeRange).toEqual([22, 7]);
   });
 });
 

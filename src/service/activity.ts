@@ -1,4 +1,4 @@
-import { ActivitySlot, Session, Settings, Streak } from '../shared/types.js';
+import { ActivitySlot, Session, Settings, Streak, QuietHoursEvaluation } from '../shared/types.js';
 import { upsertSession, upsertStreak } from '../shared/storage.js';
 
 export interface AggregatedData {
@@ -87,9 +87,9 @@ export function ensureStreakProgress(session: Session, streaks: Streak[], settin
   return upsertStreak(streaks, reset);
 }
 
-export function evaluateQuietHours(settings: Settings, date: Date): { withinQuietHours: boolean; range: [number, number] | null } {
+export function evaluateQuietHours(settings: Settings, date: Date): QuietHoursEvaluation {
   if (settings.quietHours.length === 0) {
-    return { withinQuietHours: false, range: null };
+    return { withinQuietHours: false, activeRange: null };
   }
 
   const localHour = date.getHours();
@@ -99,16 +99,16 @@ export function evaluateQuietHours(settings: Settings, date: Date): { withinQuie
     }
     if (start < end) {
       if (localHour >= start && localHour < end) {
-        return { withinQuietHours: true, range: [start, end] };
+        return { withinQuietHours: true, activeRange: [start, end] };
       }
     } else {
       // overnight range e.g. 22-7
       if (localHour >= start || localHour < end) {
-        return { withinQuietHours: true, range: [start, end] };
+        return { withinQuietHours: true, activeRange: [start, end] };
       }
     }
   }
-  return { withinQuietHours: false, range: null };
+  return { withinQuietHours: false, activeRange: null };
 }
 
 export function shouldWarnStreakExpiry(streak: Streak, now: Date, settings: Settings): boolean {
