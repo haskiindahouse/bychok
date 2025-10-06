@@ -1,0 +1,22 @@
+{
+  "name": "bychok-extension",
+  "version": "0.1.0",
+  "description": "Bychok focus tracker MV3 extension",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest"
+  },
+  "type": "module",
+  "dependencies": {
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@types/chrome": "0.0.262",
+    "@types/react": "18.2.43",
+    "@types/react-dom": "18.2.17",
+    "jsdom": "^27.0.0",
+    "typescript": "5.3.3",
+    "vitest": "0.34.6"
+  }
+}
