@@ -1,1 +1,0 @@
-Placeholder for the 128×128 extension icon. Replace this file with a PNG named icon-128.png when providing the production artwork.

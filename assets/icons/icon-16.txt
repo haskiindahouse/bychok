@@ -1,1 +1,0 @@
-Placeholder for the 16×16 extension icon. Replace this file with a PNG named icon-16.png when providing the production artwork.
