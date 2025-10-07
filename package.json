@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "description": "Bychok focus tracker MV3 extension",
   "scripts": {
-    "build": "tsc",
+    "build": "node scripts/build.mjs",
+    "build:ts": "tsc",
     "test": "vitest"
   },
   "type": "module",

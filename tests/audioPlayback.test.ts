@@ -1,13 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { handlePlaySoundMessage, type PlaySoundMessage } from '../src/service/audio_offscreen.js';
+import { handlePlaySoundMessage, type PlaySoundMessage } from '../src/shared/audio.js';
 
 declare global {
   // eslint-disable-next-line no-var
   var Audio: typeof globalThis.Audio;
 }
 
-describe('audio offscreen handler', () => {
+describe('shared audio message handler', () => {
   beforeEach(() => {
     vi.resetModules();
     vi.restoreAllMocks();
