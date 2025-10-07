@@ -1,4 +1,4 @@
-import { isPlaySoundMessage, PlaySoundMessage } from './shared/audio.js';
+import { isPlaySoundMessage, PlaySoundMessage, resolveSoundAsset } from './shared/audio.js';
 import { loadSessions, loadSettings, loadStreaks, saveSessions, saveSettings, saveStreaks } from './shared/storage.js';
 import { ActivitySlot, FocusModeState, Session, Settings, Streak } from './shared/types.js';
 import { AggregatedData, evaluateQuietHours, mergeActivitySlot, shouldWarnStreakExpiry } from './service/activity.js';
@@ -11,6 +11,7 @@ const DEFAULT_SETTINGS: Settings = {
   focusEntrySound: 'chime-soft',
   sessionLengthMinutes: 5,
   focusPresets: [5, 15, 25, 45],
+  savedSites: [],
   overlayTransparency: 0.8
 };
 
@@ -167,7 +168,12 @@ async function createNotification(id: string, options: { title: string; message:
 
 async function playSound(soundId: string): Promise<void> {
   try {
-    const url = chrome.runtime.getURL(`assets/audio/${soundId}.mp3`);
+    const assetPath = resolveSoundAsset(soundId);
+    if (!assetPath) {
+      console.warn('Unknown sound id', soundId);
+      return;
+    }
+    const url = chrome.runtime.getURL(assetPath);
     const message: PlaySoundMessage = { type: 'play-sound', payload: { url } };
     await dispatchToOverlays(message);
   } catch (error) {

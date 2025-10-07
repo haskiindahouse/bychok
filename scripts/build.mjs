@@ -16,7 +16,9 @@ execSync('npx tsc --noEmit', { stdio: 'inherit', cwd: projectRoot });
 const buildTargets = [
   {
     entry: path.join(projectRoot, 'src', 'content', 'overlay.tsx'),
-    outfile: path.join(distDir, 'content', 'overlay.js')
+    outfile: path.join(distDir, 'content', 'overlay.js'),
+    format: 'iife',
+    globalName: 'BychokOverlay'
   },
   {
     entry: path.join(projectRoot, 'src', 'popup', 'index.tsx'),
@@ -41,13 +43,20 @@ const esbuildBaseConfig = {
 };
 
 await Promise.all(
-  buildTargets.map(async ({ entry, outfile }) => {
+  buildTargets.map(async ({ entry, outfile, format, globalName }) => {
     mkdirSync(path.dirname(outfile), { recursive: true });
-    await esbuild.build({
+    const buildConfig = {
       ...esbuildBaseConfig,
       entryPoints: [entry],
       outfile
-    });
+    };
+    if (format) {
+      buildConfig.format = format;
+    }
+    if (globalName) {
+      buildConfig.globalName = globalName;
+    }
+    await esbuild.build(buildConfig);
   })
 );
 

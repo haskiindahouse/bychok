@@ -20,6 +20,7 @@ export interface Settings {
   focusEntrySound: string | null;
   sessionLengthMinutes: number;
   focusPresets: number[]; // minutes
+  savedSites: string[];
   overlayTransparency: number; // 0..1
 }
 

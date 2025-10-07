@@ -13,6 +13,19 @@ export function isPlaySoundMessage(message: unknown): message is PlaySoundMessag
   );
 }
 
+export const SOUND_LIBRARY: Record<string, string> = {
+  'chime-soft': 'assets/audio/chime-soft.mp3',
+  'pulse-air': 'assets/audio/pulse-air.wav'
+};
+
+export function resolveSoundAsset(soundId: string | null | undefined): string | null {
+  if (!soundId) {
+    return null;
+  }
+  const asset = SOUND_LIBRARY[soundId];
+  return asset ?? null;
+}
+
 export function handlePlaySoundMessage(message: PlaySoundMessage): void {
   const url = message.payload?.url;
   if (!url) {
