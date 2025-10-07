@@ -28,8 +28,8 @@
     "default_title": "Bychok"
   },
   "icons": {
-    "16": "assets/icon-16.png",
-    "32": "assets/icon-32.png",
-    "128": "assets/icon-128.png"
+    "16": "assets/icons/icon-16.ico",
+    "32": "assets/icons/icon-32.ico",
+    "128": "assets/icons/icon-128.ico"
   }
 }
