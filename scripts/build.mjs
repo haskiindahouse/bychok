@@ -1,13 +1,55 @@
 import { execSync } from 'node:child_process';
-import { cpSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { cpSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import esbuild from 'esbuild';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, '..');
+const distDir = path.join(projectRoot, 'dist');
 
-execSync('npm run build:ts --silent', { stdio: 'inherit', cwd: projectRoot });
+rmSync(distDir, { recursive: true, force: true });
+
+execSync('npx tsc --noEmit', { stdio: 'inherit', cwd: projectRoot });
+
+const buildTargets = [
+  {
+    entry: path.join(projectRoot, 'src', 'content', 'overlay.tsx'),
+    outfile: path.join(distDir, 'content', 'overlay.js')
+  },
+  {
+    entry: path.join(projectRoot, 'src', 'popup', 'index.tsx'),
+    outfile: path.join(distDir, 'popup', 'index.js')
+  },
+  {
+    entry: path.join(projectRoot, 'src', 'service_worker.ts'),
+    outfile: path.join(distDir, 'service_worker.js')
+  }
+];
+
+const esbuildBaseConfig = {
+  bundle: true,
+  format: 'esm',
+  platform: 'browser',
+  target: ['chrome114'],
+  jsx: 'automatic',
+  sourcemap: false,
+  define: {
+    'process.env.NODE_ENV': '"production"'
+  }
+};
+
+await Promise.all(
+  buildTargets.map(async ({ entry, outfile }) => {
+    mkdirSync(path.dirname(outfile), { recursive: true });
+    await esbuild.build({
+      ...esbuildBaseConfig,
+      entryPoints: [entry],
+      outfile
+    });
+  })
+);
 
 const popupSrcDir = path.join(projectRoot, 'src', 'popup');
 const popupDistDir = path.join(projectRoot, 'dist', 'popup');
