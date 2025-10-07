@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
+import { handlePlaySoundMessage, isPlaySoundMessage } from '../shared/audio.js';
 import { FocusModeState, Settings } from '../shared/types.js';
 
 const SLOT_DURATION_MS = 12_000;
@@ -168,6 +169,23 @@ function Overlay(): JSX.Element {
       }
     }
     fetchSettings().catch((error) => console.error('Settings read failed', error));
+  }, []);
+
+  useEffect(() => {
+    if (!chrome.runtime?.onMessage) {
+      return;
+    }
+
+    const listener: Parameters<typeof chrome.runtime.onMessage.addListener>[0] = (message) => {
+      if (isPlaySoundMessage(message)) {
+        handlePlaySoundMessage(message);
+      }
+    };
+
+    chrome.runtime.onMessage.addListener(listener);
+    return () => {
+      chrome.runtime.onMessage.removeListener(listener);
+    };
   }, []);
 
   useEffect(() => {

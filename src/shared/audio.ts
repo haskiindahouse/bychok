@@ -5,7 +5,7 @@ export type PlaySoundMessage = {
   };
 };
 
-function isPlaySoundMessage(message: unknown): message is PlaySoundMessage {
+export function isPlaySoundMessage(message: unknown): message is PlaySoundMessage {
   return (
     typeof message === 'object' &&
     message !== null &&
@@ -34,12 +34,4 @@ export function handlePlaySoundMessage(message: PlaySoundMessage): void {
   } catch (error) {
     console.warn('Audio playback failed', error);
   }
-}
-
-if (typeof chrome !== 'undefined' && chrome.runtime?.onMessage) {
-  chrome.runtime.onMessage.addListener((message) => {
-    if (isPlaySoundMessage(message)) {
-      handlePlaySoundMessage(message);
-    }
-  });
 }
